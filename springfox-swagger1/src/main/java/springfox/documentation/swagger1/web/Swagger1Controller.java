@@ -19,6 +19,7 @@
 
 package springfox.documentation.swagger1.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -43,8 +44,6 @@ import springfox.documentation.swagger1.mappers.ServiceModelToSwaggerMapper;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
-
-import static springfox.documentation.spring.web.json.JsonSerializer.*;
 
 @Controller
 @ApiIgnore
@@ -86,7 +85,7 @@ public class Swagger1Controller {
             = Maps.transformEntries(apiListingMap, Mappers.toApiListingDto(mapper));
 
     ApiListing apiListing = dtoApiListing.get(apiDeclaration);
-    return Optional.fromNullable(toJson(objectMapper, apiListing))
+    return Optional.fromNullable(toJson(apiListing))
             .transform(toResponseEntity(Json.class))
             .or(new ResponseEntity<Json>(HttpStatus.NOT_FOUND));
   }
@@ -100,9 +99,17 @@ public class Swagger1Controller {
     springfox.documentation.service.ResourceListing listing = documentation.getResourceListing();
     ResourceListing resourceListing = mapper.toSwaggerResourceListing(listing);
 
-    return Optional.fromNullable(toJson(objectMapper, resourceListing))
+    return Optional.fromNullable(toJson(resourceListing))
             .transform(toResponseEntity(Json.class))
             .or(new ResponseEntity<Json>(HttpStatus.NOT_FOUND));
+  }
+
+  private Json toJson(Object resourceListing) {
+    try {
+      return new Json(objectMapper.writeValueAsString(resourceListing));
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException("Could not write JSON", e);
+    }
   }
 
   private <T> Function<T, ResponseEntity<T>> toResponseEntity(Class<T> clazz) {
