@@ -16,21 +16,19 @@
  *
  *
  */
-package springfox.documentation.spring.web.json;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.annotation.JsonValue;
+package springfox.documentation.spring.web.json
 
-public class Json {
-  private final String value;
+import com.fasterxml.jackson.databind.ObjectMapper
+import spock.lang.Specification
 
-  public Json(String value) {
-    this.value = value;
-  }
-
-  @JsonValue
-  @JsonRawValue
-  public String value() {
-    return value;
+class JsonSerializerTest extends Specification {
+  def "should serialize"() {
+    ObjectMapper objectMapper = Mock()
+    String object = 'a string'
+    when:
+      JsonSerializer.toJson(objectMapper, object)
+    then:
+      1 * objectMapper.writeValueAsString(object)
   }
 }

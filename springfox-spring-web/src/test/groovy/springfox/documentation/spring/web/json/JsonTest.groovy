@@ -16,21 +16,15 @@
  *
  *
  */
-package springfox.documentation.spring.web.json;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.annotation.JsonValue;
+package springfox.documentation.spring.web.json
 
-public class Json {
-  private final String value;
+import spock.lang.Specification
 
-  public Json(String value) {
-    this.value = value;
-  }
+class JsonTest extends Specification {
 
-  @JsonValue
-  @JsonRawValue
-  public String value() {
-    return value;
+  def "should pass coverage"() {
+    expect:
+      new Json("Something").value()
   }
 }
