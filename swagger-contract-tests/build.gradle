@@ -29,6 +29,9 @@ dependencies {
   compile 'taglibs:standard:1.1.2'
   compile 'javax.servlet:jstl:1.2'
 
+  compile 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.5.2'
+  compile 'org.hibernate:hibernate-core:4.3.9.Final'
+
   compile(project(':springfox-swagger1')) {
     exclude group: 'org.springframework', module: 'spring-web'
   }
@@ -39,14 +42,14 @@ dependencies {
   testCompile libs.test
   testCompile 'org.skyscreamer:jsonassert:1.2.3'
   testCompile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.2'
-
-  compile(project(path: ':springfox-swagger1', configuration: 'testArtifacts')) {
+  testCompile(project(':springfox-swagger2'))
+  testCompile(project(path: ':springfox-swagger1', configuration: 'testArtifacts')) {
     exclude group: 'org.springframework', module: 'spring-web'
   }
-  compile(project(path: ':springfox-swagger2', configuration: 'testArtifacts')) {
+  testCompile(project(path: ':springfox-swagger2', configuration: 'testArtifacts')) {
     exclude group: 'org.springframework', module: 'spring-web'
   }
-  compile(project(path: ':springfox-petstore')) {
+  testCompile(project(path: ':springfox-petstore')) {
     exclude group: 'org.springframework', module: 'spring-web'
   }
 
